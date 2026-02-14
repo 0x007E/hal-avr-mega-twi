@@ -215,8 +215,8 @@
         #include <avr/interrupt.h>
     #endif
 
-    #include "../../../common/defines/TWI_defines.h"
-    #include "../../../common/enums/TWI_enums.h"
+    #include "../../common/defines/TWI_defines.h"
+    #include "../../common/enums/TWI_enums.h"
 
     unsigned char twi_init(void);
             void twi_disable(void);
