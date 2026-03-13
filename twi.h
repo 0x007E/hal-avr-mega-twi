@@ -71,33 +71,7 @@
             #define TWI_BITRATE ((F_CPU/F_TWI) - 16UL) / (2 * (1<<TWI_PRESCALER) * (1<<TWI_PRESCALER))
         #endif
     #endif
-
-    #ifndef TWI_ADDRESS
-        /**
-         * @def TWI_ADDRESS
-         * @brief Slave address of the TWI controller.
-         *
-         * @details
-         * This macro defines the 7-bit address of the `TWI` (I2C) controller when operating as a slave device on the bus. The address is used by other devices (masters) to communicate with this slave.
-         * 
-         * @attention it must be unique on the bus to avoid address conflicts.
-         */
-        #define TWI_ADDRESS 0x42
-    #endif
-
-    #ifndef TWI_BROADCAST
-        /**
-         * @def TWI_BROADCAST
-         * @brief Enable or disable listening to general call addresses on the TWI bus.
-         *
-         * @details
-         * This macro configures whether the `TWI` controller, when acting as a slave, responds to general call addresses.
-         * 
-         * Setting this to `1` enables the controller to listen and respond to general call messages (address `0x00`). Setting to `0` disables general call response, so the controller only reacts to its specific slave address.
-         */
-        #define TWI_BROADCAST 0x00
-    #endif
-
+    
     /** 
      * @defgroup TWI_Status_Codes TWI Status Codes
      * @brief Status codes returned by the TWI hardware interface.
