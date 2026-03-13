@@ -122,7 +122,9 @@ inline unsigned char twi_status(void)
         TWCR = (1<<TWINT) | (1<<TWEN) | (1<<TWSTO); // Stop a TWI transmission
     
         while(!(TWCR & (1<<TWSTO)))
+		{
             asm volatile("NOP");
+		}
     }
 
     /**
@@ -138,13 +140,46 @@ inline unsigned char twi_status(void)
      * - `TWI_General` if a general error occurred.
      *
      * @details
-     * This inline function constructs the address byte by shifting the 7-bit slave address left by one and combining it with the least significant bit representing the operation (read/write). It then calls `twi_set` to transmit this address byte over the TWI bus and returns the transmission status.
+     * This function constructs the address byte by shifting the 7-bit slave address left by one and combining it with the least significant bit representing the operation (read/write). It then calls `twi_set` to transmit this address byte over the TWI bus and returns the transmission status.
      * 
      * @note The function relies on `twi_set` for the actual data transmission and error checking.
      */
-    inline TWI_Error twi_address(unsigned char address, TWI_Operation operation)
+    TWI_Error twi_address(unsigned char address, TWI_Operation operation)
     {
-        return twi_set((address<<1) | (0x01 & operation));
+		TWDR = (address<<1) | (0x01 & operation);   // Write data to data register
+		TWCR = (1<<TWINT) | (1<<TWEN);              // Transmit databyte
+		
+		// Check if transmission done
+		while(!(TWCR & (1<<TWINT)))
+		{
+			asm volatile("NOP");
+		}
+		
+		if(operation == TWI_Write)
+		{
+			switch ((TWSR & 0xF8))
+			{
+				case TWI_STATUS_ADDRESS_WRITE_ACK:
+				return TWI_None;
+				case TWI_STATUS_ADDRESS_WRITE_NACK:
+				return TWI_Ack;
+				case TWI_STATUS_ARBITRATION_LOST:
+				return TWI_Arbitration;
+				default:
+				return TWI_General;
+			}
+		}
+		switch ((TWSR & 0xF8))
+		{
+			case TWI_STATUS_ADDRESS_READ_ACK:
+			return TWI_None;
+			case TWI_STATUS_ADDRESS_READ_NACK:
+			return TWI_Ack;
+			case TWI_STATUS_ARBITRATION_LOST:
+			return TWI_Arbitration;
+			default:
+			return TWI_General;
+		}
     }
 
     /**
@@ -172,7 +207,9 @@ inline unsigned char twi_status(void)
     
         // Check if transmission done
         while(!(TWCR & (1<<TWINT)))
+		{
             asm volatile("NOP");
+		}
         
         switch ((TWSR & 0xF8))
         {
@@ -211,9 +248,13 @@ inline unsigned char twi_status(void)
     {
         // Setup if ACK should be sent
         if(acknowledge == TWI_ACK)
+		{
             TWCR = (1<<TWINT) | (1<<TWEA) | (1<<TWEN);
+		}
         else
+		{
             TWCR = (1<<TWINT) | (1<<TWEN);
+		}
     
         // Check if transmission done
         while (!(TWCR & (1<<TWINT)))
