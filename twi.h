@@ -121,36 +121,36 @@
         #define TWI_STATUS_REPEATED_START 0x10
     #endif
 
-    #ifndef TWI_STATUS_ADDRESS_WRITE_NACK
-        /**
-         * @def TWI_STATUS_ADDRESS_WRITE_NACK
-         * @brief Status code indicating SLA+W has been transmitted and NOT acknowledged.
-         */
-        #define TWI_STATUS_ADDRESS_WRITE_NACK 0x18
-    #endif
-
     #ifndef TWI_STATUS_ADDRESS_WRITE_ACK
         /**
-         * @def TWI_STATUS_ADDRESS_WRITE_ACK
+         * @def TWI_STATUS_ADDRESS_WRITE_NACK
          * @brief Status code indicating SLA+W has been transmitted and acknowledged.
          */
-        #define TWI_STATUS_ADDRESS_WRITE_ACK 0x20
+        #define TWI_STATUS_ADDRESS_WRITE_ACK 0x18
     #endif
 
-    #ifndef TWI_STATUS_DATA_WRITE_NACK
+    #ifndef TWI_STATUS_ADDRESS_WRITE_NACK
         /**
-         * @def TWI_STATUS_DATA_WRITE_NACK
-         * @brief Status code indicating data byte has been transmitted and NOT acknowledged.
+         * @def TWI_STATUS_ADDRESS_WRITE_ACK
+         * @brief Status code indicating SLA+W has been transmitted and NOT acknowledged.
          */
-        #define TWI_STATUS_DATA_WRITE_NACK 0x28
+        #define TWI_STATUS_ADDRESS_WRITE_NACK 0x20
     #endif
 
     #ifndef TWI_STATUS_DATA_WRITE_ACK
         /**
-         * @def TWI_STATUS_DATA_WRITE_ACK
+         * @def TWI_STATUS_DATA_WRITE_NACK
          * @brief Status code indicating data byte has been transmitted and acknowledged.
          */
-        #define TWI_STATUS_DATA_WRITE_ACK 0x30
+        #define TWI_STATUS_DATA_WRITE_ACK 0x28
+    #endif
+
+    #ifndef TWI_STATUS_DATA_WRITE_NACK
+        /**
+         * @def TWI_STATUS_DATA_WRITE_ACK
+         * @brief Status code indicating data byte has been transmitted and NOT acknowledged.
+         */
+        #define TWI_STATUS_DATA_WRITE_NACK 0x30
     #endif
 
     #ifndef TWI_STATUS_ARBITRATION_LOST
@@ -219,12 +219,12 @@
     #include "../../common/enums/TWI_enums.h"
 
     unsigned char twi_init(void);
-            void twi_disable(void);
+             void twi_disable(void);
     unsigned char twi_status(void);
 
     #ifndef TWI_TWIE
         TWI_Error twi_start(void);
-            void twi_stop(void);
+             void twi_stop(void);
         TWI_Error twi_address(unsigned char address, TWI_Operation operation);
         TWI_Error twi_set(unsigned char data);
         TWI_Error twi_get(unsigned char *data, TWI_Acknowledge acknowledge);
