@@ -37,9 +37,10 @@ jobs:
         run: |
           mkdir -p ./hal/common
           cp -r ./hal-common/. ./hal/common/
+          
           mkdir -p ./hal/avr/twi
-          cp ./twi.c ./hal/avr/twi/
-          cp ./twi.h ./hal/avr/twi/
+          cp -r ./twi.c ./hal/avr/twi/
+          cp -r ./twi.h ./hal/avr/twi/
 
       - name: Setup Pages
         id: pages
